@@ -9,6 +9,11 @@ const localizer = momentLocalizer(moment)
 
 const BigCalendar = () => {
     const [view,setView] = useState<View>(Views.WORK_WEEK);
+
+    const handleOnChangeView = (selectedView: View) =>{
+      setView(selectedView)
+    };
+
  return (
     <div>
     <Calendar
@@ -18,7 +23,10 @@ const BigCalendar = () => {
       endAccessor="end"
       views={["work_week","day"]}
       view={view}
-      style={{ height: 500 }}
+      style={{ height: "98%" }}
+      onView={handleOnChangeView}
+      min={new Date(2024, 11, 10, 8, 0, 0)} 
+      max={new Date(2024, 11, 10, 17, 0, 0)}
     />
   </div>
  )
