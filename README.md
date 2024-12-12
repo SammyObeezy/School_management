@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>School Management System README</title>
-</head>
 <body>
 
 <h1>School Management System</h1>
