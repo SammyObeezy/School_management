@@ -2,41 +2,6 @@
 <html>
 <head>
   <title>School Management System README</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 20px;
-      background-color: #f9f9f9;
-    }
-    h1, h2, h3 {
-      color: #333;
-    }
-    code {
-      background-color: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: "Courier New", Courier, monospace;
-    }
-    pre {
-      background-color: #f4f4f4;
-      padding: 10px;
-      border-radius: 4px;
-      overflow-x: auto;
-    }
-    a {
-      color: #007BFF;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    ul {
-      margin: 10px 0;
-      padding-left: 20px;
-    }
-  </style>
 </head>
 <body>
 
