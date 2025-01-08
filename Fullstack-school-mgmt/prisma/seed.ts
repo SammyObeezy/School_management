@@ -24,6 +24,7 @@ async function main() {
       },
     });
   }
+  
 
   // CLASS
   for (let i = 1; i <= 6; i++) {

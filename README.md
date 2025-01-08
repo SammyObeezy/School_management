@@ -3,7 +3,7 @@
 <body>
 
 <h1>School Management System</h1>
-<p>This is a modern <strong>School Management System</strong> designed to streamline and automate school operations. Built using <strong>React</strong> and <strong>Next.js</strong> for the frontend, with <strong>PostgreSQL</strong> as the backend database, the application is containerized using <strong>Docker</strong> and hosted on <strong>Vercel</strong> for optimal performance and scalability.</p>
+<p>This is a modern <strong>School Management System</strong> designed to streamline and automate school operations. Built using <strong>React</strong> and <strong>Next.js</strong> for the frontend, with <strong>PostgreSQL</strong> as the backend database, and <strong>Prisma</strong> for database ORM, the application is containerized using <strong>Docker</strong> and hosted on <strong>Vercel</strong> for optimal performance and scalability.</p>
 
 <hr>
 
@@ -45,6 +45,7 @@
 <h3>Backend</h3>
 <ul>
   <li>PostgreSQL (Database)</li>
+  <li>Prisma (Database ORM)</li>
   <li>Node.js with Express (API)</li>
 </ul>
 <h3>DevOps</h3>
@@ -59,6 +60,7 @@
 <pre><code>root
 ├── backend              # Backend service (API and database)
 │   ├── src              # Source code for backend
+│   ├── prisma           # Prisma schema and migrations
 │   ├── Dockerfile       # Dockerfile for backend container
 │   └── package.json     # Backend dependencies
 ├── next-dashboard-ui    # Frontend service
@@ -78,6 +80,7 @@
   <li>Node.js (v16 or above)</li>
   <li>Docker (latest version)</li>
   <li>PostgreSQL (if running without Docker)</li>
+  <li>Prisma CLI (for database management)</li>
 </ul>
 
 <h3>Installation</h3>
@@ -121,7 +124,7 @@ npm run dev</code></pre>
 <h4>Frontend (<code>next-dashboard-ui/.env</code>):</h4>
 <pre><code>NEXT_PUBLIC_API_URL=http://localhost:3000</code></pre>
 <h4>Backend (<code>backend/.env</code>):</h4>
-<pre><code>DATABASE_URL=postgres://username:password@localhost:5432/school_management
+<pre><code>DATABASE_URL=postgresql://username:password@localhost:5432/school_management
 PORT=5000
 JWT_SECRET=your_jwt_secret</code></pre>
 

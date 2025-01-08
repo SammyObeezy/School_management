@@ -3,20 +3,11 @@ import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
 import { role, teachersData } from '@/lib/data';
+import { Teacher } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
 
-type Teacher = {
-  id:number;
-  teacherId:string;
-  name:string;
-  email?:string;
-  photo:string;
-  phone:string;
-  subjects:string[];
-  classes:string[];
-  address:string;
-}
+
 const columns = [
   {
     header:"Info", 
@@ -56,11 +47,11 @@ const columns = [
 
 const TeacherListPage = () => {
 
-  const renderRow = (item:Teacher) =>(
+  const renderRow = (item: Teacher) =>(
    <tr key={item.id} className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight'>
      <td className='flex items-center gap-4 p-4'>
       <Image 
-      src={item.photo} 
+      src={item.img || "/noAvatar.png"} 
       alt='' 
       width={40} 
       height={40} 
