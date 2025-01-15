@@ -1,16 +1,20 @@
+import FormModel from '@/components/FormModel';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
 import {announcementsData, role} from '@/lib/data';
+import prisma from '@/lib/prisma';
+import { ITEMS_PER_PAGE } from '@/lib/settings';
+import { Assignment, Prisma } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
 
-type Announcement = {
-  id:number;
-  title:string;
-  class: string;
-  date: string;
-}
+type AnnouncementList = Assignment & {
+  lesson:{
+  subject:Subject;
+  class:Class;
+  teacher:Teacher;
+}}
 const columns = [
   {
     header:"Title", 
@@ -35,39 +39,87 @@ const columns = [
   }
 ]
 
-
-const AnnouncementListPage = () => {
-
-  const renderRow = (item:Announcement) =>(
-   <tr key={item.id} className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight'>
-     <td className='flex items-center gap-4 p-4'>
-        {item.title}
-    </td>
+const renderRow = (item:AnnouncementList) =>(
+  <tr key={item.id} className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight'>
+    <td className='flex items-center gap-4 p-4'>{item.lesson.subject.name}</td>
+    <td>{item.lesson.class.name}</td>
+    <td  className='hidden md:table-cell'>{item.lesson.teacher.name + " " + item.lesson.teacher.surname}</td>
+    <td  className='hidden md:table-cell'>{new Intl.DateTimeFormat("en-US").format(item.dueDate)}</td>
     <td>
-        {item.class}</td>
-    <td  className='hidden md:table-cell'>{item.date}</td>
-    <td>
-      <div className="flex items-center gap-2">
-        <Link href={`/list/teachers/${item.id}`}>
-        <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
-          <Image src="/edit.png"
-          alt=''
-          width={16}
-          height={16} />
-        </button>
-        </Link>
-       {role === "admin" && (
-         <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaPurple">
-         <Image src="/delete.png"
+     <div className="flex items-center gap-2">
+       {/* <Link href={`/list/teachers/${item.id}`}>
+       <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
+         <Image src="/edit.png"
          alt=''
          width={16}
          height={16} />
        </button>
-       )}
-      </div>
-    </td>
-   </tr>
-  );
+       </Link> */}
+      {role === "admin" && (
+        <>
+        <FormModel table='assignment' type='update' data={item} />
+        <FormModel table='assignment' type='delete' id={item.id} />
+        </>
+      )}
+     </div>
+   </td>
+  </tr>
+ );
+
+const AnnouncementListPage = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+
+  const { page, ...queryParams } = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  // UTL PARAMS CONDITION
+
+  const query: Prisma.AssignmentWhereInput = {}
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "classId":
+            query.lesson = {classId :parseInt(value)};
+            break;
+          case "teacherId":
+            query.lesson = {
+              teacherId: value,
+            }
+            break;
+          case "search":
+            query.lesson = {
+              subject :{
+                name: { contains: value, mode: "insensitive" },
+              }
+            }
+            break;
+        }
+      }
+    }
+  }
+  const [data, count] = await prisma.$transaction([
+    prisma.assignment.findMany({
+      where: query,
+      include: {
+        lesson: {
+          select:{
+            subject: { select: { name: true } },
+            teacher: { select: { name: true,surname: true } },
+            class: { select: { name: true } },
+          }
+        }
+      },
+      take: ITEMS_PER_PAGE,
+      skip: ITEMS_PER_PAGE * (p - 1),
+    }),
+    prisma.assignment.count({ where: query }),
+  ]);
+
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/*TOP */}
@@ -83,17 +135,15 @@ const AnnouncementListPage = () => {
               <Image src="/sort.png" alt='' width={14} height={14} />
             </button>
             {role === "admin" && (
-                <button className='w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow'>
-                <Image src="/plus.png" alt='' width={14} height={14} />
-              </button>
+                <FormModel table='assignment' type='create'/>
            ) }
           </div>
         </div>
       </div>
       {/*LIST */}
-      <Table columns={columns} renderRow={renderRow} data={announcementsData} />
+      <Table columns={columns} renderRow={renderRow} data={data} />
       {/*PAGINATION */}
-        <Pagination />
+        <Pagination page={p} count={count}/>
     </div>
   )
 }
