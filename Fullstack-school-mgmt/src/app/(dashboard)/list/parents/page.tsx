@@ -5,7 +5,7 @@ import TableSearch from '@/components/TableSearch';
 import { parentsData, role, } from '@/lib/data';
 import prisma from '@/lib/prisma';
 import { ITEMS_PER_PAGE } from '@/lib/settings';
-import { Prisma } from '@prisma/client';
+import { Parent, Prisma, Student } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -90,6 +90,8 @@ const ParentListPage = async ({
           case "search":
             query.name = { contains: value, mode: "insensitive" }
             break;
+            default:
+              break;
         }
       }
     }

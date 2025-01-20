@@ -5,7 +5,7 @@ import TableSearch from '@/components/TableSearch';
 import {role, subjectsData,} from '@/lib/data';
 import prisma from '@/lib/prisma';
 import { ITEMS_PER_PAGE } from '@/lib/settings';
-import { Prisma } from '@prisma/client';
+import { Prisma, Subject, Teacher } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -73,6 +73,8 @@ const SubjectListPage = async ({
           case "search":
             query.name = { contains: value, mode: "insensitive" }
             break;
+            default:
+              break;
         }
       }
     }

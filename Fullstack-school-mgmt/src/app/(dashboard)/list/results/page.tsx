@@ -107,8 +107,8 @@ const ResultListPage = async ({
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
-          case "classId":
-            query.lesson = {classId :parseInt(value)};
+          case "studentId":
+            query.studentId = value;
             break;
           case "search":
             query.OR = [

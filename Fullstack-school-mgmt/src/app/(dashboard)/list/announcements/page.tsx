@@ -5,24 +5,15 @@ import TableSearch from '@/components/TableSearch';
 import {announcementsData, role} from '@/lib/data';
 import prisma from '@/lib/prisma';
 import { ITEMS_PER_PAGE } from '@/lib/settings';
-import { Assignment, Prisma } from '@prisma/client';
+import { Announcement, Class, Prisma } from '@prisma/client';
 import Image from 'next/image';
-import Link from 'next/link';
 
-type AnnouncementList = Assignment & {
-  lesson:{
-  subject:Subject;
-  class:Class;
-  teacher:Teacher;
-}}
+
+type AnnouncementList = Announcement & { class : Class}
 const columns = [
   {
     header:"Title", 
     accessor:"title"
-  },
-  {
-    header:"Student", 
-    accessor:"student",
   },
   {
     header:"Class", 
@@ -41,10 +32,9 @@ const columns = [
 
 const renderRow = (item:AnnouncementList) =>(
   <tr key={item.id} className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight'>
-    <td className='flex items-center gap-4 p-4'>{item.lesson.subject.name}</td>
-    <td>{item.lesson.class.name}</td>
-    <td  className='hidden md:table-cell'>{item.lesson.teacher.name + " " + item.lesson.teacher.surname}</td>
-    <td  className='hidden md:table-cell'>{new Intl.DateTimeFormat("en-US").format(item.dueDate)}</td>
+    <td className='flex items-center gap-4 p-4'>{item.title}</td>
+    <td>{item.class.name}</td>
+    <td  className='hidden md:table-cell'>{new Intl.DateTimeFormat("en-US").format(item.date)}</td>
     <td>
      <div className="flex items-center gap-2">
        {/* <Link href={`/list/teachers/${item.id}`}>
@@ -78,46 +68,31 @@ const AnnouncementListPage = async ({
 
   // UTL PARAMS CONDITION
 
-  const query: Prisma.AssignmentWhereInput = {}
+  const query: Prisma.AnnouncementWhereInput = {}
+
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
-          case "classId":
-            query.lesson = {classId :parseInt(value)};
-            break;
-          case "teacherId":
-            query.lesson = {
-              teacherId: value,
-            }
-            break;
           case "search":
-            query.lesson = {
-              subject :{
-                name: { contains: value, mode: "insensitive" },
-              }
-            }
+            query.title = { contains: value, mode: "insensitive" }
+            break;
+          default:
             break;
         }
       }
     }
   }
   const [data, count] = await prisma.$transaction([
-    prisma.assignment.findMany({
+    prisma.announcement.findMany({
       where: query,
       include: {
-        lesson: {
-          select:{
-            subject: { select: { name: true } },
-            teacher: { select: { name: true,surname: true } },
-            class: { select: { name: true } },
-          }
-        }
+        class: true,
       },
       take: ITEMS_PER_PAGE,
       skip: ITEMS_PER_PAGE * (p - 1),
     }),
-    prisma.assignment.count({ where: query }),
+    prisma.announcement.count({ where: query }),
   ]);
 
   return (
