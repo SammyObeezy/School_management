@@ -3,7 +3,9 @@
 <body>
 
 <h1>School Management System</h1>
-<p>This is a modern <strong>School Management System</strong> designed to streamline and automate school operations. Built using <strong>React</strong> and <strong>Next.js</strong> for the frontend, with <strong>PostgreSQL</strong> as the backend database, and <strong>Prisma</strong> for database ORM, the application is containerized using <strong>Docker</strong> and hosted on <strong>Vercel</strong> for optimal performance and scalability.</p>
+<p>This is a modern <strong>School Management System</strong> designed to streamline and automate school operations. Built using <strong>React</strong> and <strong>Next.js</strong> for the frontend, with <strong>PostgreSQL</strong> as the backend database, and <strong>Prisma</strong> for database ORM, the application is containerized using <strong>Docker</strong> and hosted on <strong>Vercel</strong> for optimal performance and scalability. 
+
+<strong>Clerk</strong> is used for seamless authentication and user management.</p>
 
 <hr>
 
@@ -31,6 +33,7 @@
   <li><strong>Notifications System</strong>: Timely alerts for users.</li>
   <li><strong>Responsive UI</strong>: Designed for both desktop and mobile devices.</li>
   <li><strong>Data Security</strong>: Ensures data integrity and privacy.</li>
+  <li><strong>Authentication and User Management</strong>: Seamless authentication powered by Clerk.</li>
 </ul>
 
 <hr>
@@ -41,6 +44,10 @@
   <li>React.js</li>
   <li>Next.js</li>
   <li>TailwindCSS (for styling)</li>
+</ul>
+<h3>Authentication</h3>
+<ul>
+  <li>Clerk (Authentication and User Management)</li>
 </ul>
 <h3>Backend</h3>
 <ul>
@@ -67,6 +74,7 @@
 │   ├── pages            # Next.js pages
 │   ├── components       # Shared React components
 │   ├── styles           # Styling with TailwindCSS
+│   ├── clerk            # Clerk configuration and setup
 │   └── package.json     # Frontend dependencies
 ├── docker-compose.yml   # Docker Compose for full stack setup
 └── README.md            # Project documentation</code></pre>
@@ -100,29 +108,25 @@ npm install</code></pre>
   </li>
 </ol>
 
-<h3>Running the Project</h3>
-<h4>Development Mode</h4>
+<h3>Authentication Setup</h3>
+<p>Configure Clerk for authentication:</p>
 <ol>
-  <li>Start the PostgreSQL database (if not using Docker):
-    <pre><code>service postgresql start</code></pre>
-  </li>
-  <li>Run the backend server:
-    <pre><code>cd backend
-npm run dev</code></pre>
-  </li>
-  <li>Run the frontend:
-    <pre><code>cd next-dashboard-ui
-npm run dev</code></pre>
-  </li>
+  <li>Sign up for a Clerk account at <a href="https://clerk.dev">https://clerk.dev</a>.</li>
+  <li>Create a Clerk application and note the API keys.</li>
+  <li>Add the Clerk environment variables to the frontend:</li>
 </ol>
-<p>Access the application at <code>http://localhost:3000</code>.</p>
+<h4>Frontend (<code>next-dashboard-ui/.env</code>):</h4>
+<pre><code>NEXT_PUBLIC_CLERK_FRONTEND_API=your_clerk_frontend_api
+NEXT_PUBLIC_CLERK_API_URL=your_clerk_api_url</code></pre>
 
 <hr>
 
 <h2 id="environment-variables">Environment Variables</h2>
 <p>Create a <code>.env</code> file in both <code>next-dashboard-ui</code> and <code>backend</code> directories and set the following variables:</p>
 <h4>Frontend (<code>next-dashboard-ui/.env</code>):</h4>
-<pre><code>NEXT_PUBLIC_API_URL=http://localhost:3000</code></pre>
+<pre><code>NEXT_PUBLIC_API_URL=http://localhost:3000
+NEXT_PUBLIC_CLERK_FRONTEND_API=your_clerk_frontend_api
+NEXT_PUBLIC_CLERK_API_URL=your_clerk_api_url</code></pre>
 <h4>Backend (<code>backend/.env</code>):</h4>
 <pre><code>DATABASE_URL=postgresql://username:password@localhost:5432/school_management
 PORT=5000
