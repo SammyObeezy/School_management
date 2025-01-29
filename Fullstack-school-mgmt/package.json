@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@4c/tsconfig": "^0.4.1",
+    "@clerk/elements": "^0.22.16",
     "@clerk/nextjs": "^6.9.14",
     "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^6.2.0",

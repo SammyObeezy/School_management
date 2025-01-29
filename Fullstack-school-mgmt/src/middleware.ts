@@ -1,6 +1,21 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { routeAccessMap } from "./lib/settings";
 
-export default clerkMiddleware();
+
+const matchers = Object.keys(routeAccessMap).map((route) => ({
+  matcher: createRouteMatcher([route]),
+  allowedRoles: routeAccessMap[route],
+}));
+
+console.log(matchers);
+
+export default clerkMiddleware(async (auth, req) => {
+  // if (isProtectedRoute(req)) await auth.protect()
+
+  const { sessionClaims } = auth();
+
+  const role  = (sessionClaims?.metadata as { role?: string })?.role;
+})
 
 export const config = {
   matcher: [
