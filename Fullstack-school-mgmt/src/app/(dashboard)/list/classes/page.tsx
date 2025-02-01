@@ -2,9 +2,9 @@ import FormModel from '@/components/FormModel';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
-import { classesData, role, subjectsData, } from '@/lib/data';
 import prisma from '@/lib/prisma';
 import { ITEMS_PER_PAGE } from '@/lib/settings';
+import { role } from '@/lib/utils';
 import { Class, Prisma, Teacher } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -30,10 +30,11 @@ const columns = [
     accessor: "supervisor",
     className: "hidden md:table-cell",
   },
-  {
+  ...(role === "admin" ? [ {
     header: "Actions",
     accessor: "actions",
-  }
+  },
+]: []),
 ]
 
 const renderRow = (item: ClassList) => (

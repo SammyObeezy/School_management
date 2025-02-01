@@ -2,12 +2,11 @@ import FormModel from '@/components/FormModel';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
-import {assignmentsData, role} from '@/lib/data';
 import prisma from '@/lib/prisma';
 import { ITEMS_PER_PAGE } from '@/lib/settings';
+import { currentUserId, role } from '@/lib/utils';
 import { Assignment, Class, Prisma, Subject, Teacher } from '@prisma/client';
 import Image from 'next/image';
-
 
 type AssignmentList = Assignment & {
   lesson: {
@@ -35,10 +34,11 @@ const columns = [
     accessor:"dueDate",
     className:"hidden md:table-cell",
   },
-  {
+  ...(role === "admin" || "teacher" ? [ {
     header: "Actions",
     accessor: "actions",
-  }
+  },
+]: []),
 ]
 
 const renderRow = (item: AssignmentList) => (
@@ -102,6 +102,36 @@ const AssignmentListPage = async ({
         }
       }
     }
+  }
+
+  //ROLE CONDITIONS
+
+  switch (role) {
+    case "admin":
+      break;
+      case "teacher":
+        query.lesson.teacherId = currentUserId!;
+        break;
+        case "student":
+          query.lesson.class={
+            students: {
+              some:{
+                id:currentUserId!,
+              },
+            },
+          };
+          break;
+          case "parent":
+            query.lesson.class={
+              students: {
+                some:{
+                  parentId:currentUserId!,
+                },
+              },
+            };
+            break;
+    default:
+      break;
   }
   const [data, count] = await prisma.$transaction([
     prisma.assignment.findMany({
