@@ -1,4 +1,4 @@
-# Lama Dev School Management Dashboard
+# School Management Dashboard
 
 ## Getting Started
 
@@ -9,7 +9,7 @@ npm run dev
 # or
 yarn dev
 # or
-pnpm dev
+npm dev
 # or
 bun dev
 ```
