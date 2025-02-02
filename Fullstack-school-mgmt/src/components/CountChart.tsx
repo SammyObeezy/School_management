@@ -2,21 +2,21 @@
 import Image from 'next/image';
 import { RadialBarChart, RadialBar, Legend, ResponsiveContainer } from 'recharts';
 
-const data = [
+const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
+  const data = [
     {
         name: 'Total',
-        count: 106,
+        count: boys + girls,
         fill: 'white',
       },
-  
     {
     name: 'Girls',
-    count: 53,
+    count: girls,
     fill: '#FAE27C',
   },
   {
     name: 'Boys',
-    count: 53,
+    count: boys,
     fill: '#C3EBFA',
   },
 ];
@@ -28,7 +28,6 @@ const style = {
   lineHeight: '24px',
 };
 
-const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
   return (
     <div className="relative w-full h-[75%]">
     <ResponsiveContainer>
